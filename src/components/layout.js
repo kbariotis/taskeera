@@ -35,7 +35,7 @@ const Layout = ({ children }) => {
             >
               © {new Date().getFullYear()} {data.site.siteMetadata.title}
               {` - `}
-              <a href="mailto:support@jobster.com">Support</a>
+              <a href="mailto:support@taskeera.com">Support</a>
               {` - `}
               <a href="https://twitter.com/taskeerahq">
                 <span
