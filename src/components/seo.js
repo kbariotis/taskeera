@@ -60,6 +60,14 @@ function SEO({ description, lang, meta, title }) {
           name: `twitter:description`,
           content: metaDescription,
         },
+        {
+          name: `twitter:image`,
+          content: `https://taskeera.com/twitter.png`,
+        },
+        {
+          name: `twitter:image:alt`,
+          content: metaDescription,
+        },
       ].concat(meta)}
     />
   )
