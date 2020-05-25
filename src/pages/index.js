@@ -13,6 +13,10 @@ const encode = data => {
     .join("&")
 }
 
+const verifyEmail = email => {
+  return email.indexOf("@") > 0 && email.indexOf(" ") === -1
+}
+
 const HowItWorksEntry = ({ title, text, image, orientation }) => (
   <Row
     style={{
@@ -44,9 +48,16 @@ const SignUpForm = () => {
   const [email, setEmail] = useState()
   const [error, setError] = useState(false)
   const [success, setSuccess] = useState(false)
+  const [validEmail, setValidEmail] = useState(true)
 
   const handleSubmit = async evt => {
     evt.preventDefault()
+
+    if (!verifyEmail(email)) {
+      setValidEmail(false)
+      return
+    }
+
     try {
       await fetch("/", {
         method: "POST",
@@ -81,7 +92,10 @@ const SignUpForm = () => {
                 <Col sm={8}>
                   <input
                     name="email"
-                    onChange={e => setEmail(e.target.value)}
+                    onChange={e => {
+                      setEmail(e.target.value)
+                      setValidEmail(true)
+                    }}
                     style={{
                       display: "block",
                       "border-radius": "5px",
@@ -89,6 +103,7 @@ const SignUpForm = () => {
                       padding: "9px",
                       width: "100%",
                       "margin-top": "1rem",
+                      "border-color": validEmail ? "#ccc" : "red",
                     }}
                     placeholder="Your email to keep you in the loop"
                     type="text"
