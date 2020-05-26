@@ -124,7 +124,7 @@ const SignUpForm = () => {
                     }}
                     type="submit"
                   >
-                    Susbcribe
+                    Subscribe
                   </button>
                 </Col>
               </Row>
