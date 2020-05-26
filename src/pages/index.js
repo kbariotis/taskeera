@@ -4,6 +4,7 @@ import { Row, Col } from "react-flexbox-grid"
 import Layout from "../components/layout"
 import SDKImage from "../components/nodejs"
 import ObserveImage from "../components/observe.svg"
+import LogosImage from "../components/logos"
 import SearchImage from "../components/search.svg"
 import SEO from "../components/seo"
 
@@ -182,11 +183,19 @@ const IndexPage = () => (
             image={<SDKImage />}
           />
           <HowItWorksEntry
+            title={"Integrate"}
+            text={
+              "Integrate with ease with your favorite message broker or distributed queue of choice. We provide plugins for all the major platforms."
+            }
+            orientation={"left"}
+            image={<LogosImage />}
+          />
+          <HowItWorksEntry
             title={"Observe"}
             text={
               "Observe your tasks through Taskeeras' UI. Search for a specific group or aggregate based on tags."
             }
-            orientation={"left"}
+            orientation={"right"}
             image={<ObserveImage />}
           />
           <HowItWorksEntry
@@ -194,7 +203,7 @@ const IndexPage = () => (
             text={
               "Use Taskeeras' UI to search through your tasks names, metadata and tags. Aggregate and analyze the results."
             }
-            orientation={"right"}
+            orientation={"left"}
             image={<SearchImage />}
           />
         </div>
