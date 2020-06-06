@@ -1,0 +1,82 @@
+version: "3.4"
+
+services:
+  api:
+    build:
+      context: ./api
+      args:
+        - NODE_ENV=development
+    command: ../node_modules/.bin/nodemon --watch src/ -e ts --ignore 'src/**/*.spec.ts' --exec 'ts-node' --project tsconfig.json server.ts
+    ports:
+      - "8090:3000"
+      - "9229:9229"
+      - "9230:9230"
+    volumes:
+      - ./api:/opt/node_app/api:delegated
+      - ./api/package.json:/opt/node_app/package.json
+      - ./api/yarn.lock:/opt/node_app/yarn.lock
+      - notused:/opt/node_app/api/node_modules
+    environment:
+      - NODE_ENV=development
+      - APP_MODE=development
+      - REDIS_HOST=redis
+      - REDIS_PASSWORD=mysecretpassword
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PASSWORD=mysecretpassword
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=taskeera
+    depends_on:
+      - postgres
+    healthcheck:
+      disable: true
+
+  app:
+    build:
+      context: ./app
+      target: node
+      args:
+        - NODE_ENV=development
+    command: ../node_modules/.bin/react-scripts start
+    stdin_open: true
+    ports:
+      - "8080:3000"
+    volumes:
+      - ./app:/opt/node_app/app:delegated
+      - ./app/package.json:/opt/node_app/package.json
+      - ./app/yarn.lock:/opt/node_app/yarn.lock
+      - notused:/opt/node_app/app/node_modules
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - api
+    healthcheck:
+      disable: true
+
+  postgres:
+    image: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=taskeera
+      - POSTGRES_PASSWORD=mysecretpassword
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 1s
+      timeout: 3s
+      retries: 30
+
+volumes:
+  notused:
