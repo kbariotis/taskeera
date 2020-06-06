@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { Row, Col } from "react-flexbox-grid"
 
-import Layout from "../components/layout"
+import Layout from "../components/layouts/default"
 import SDKImage from "../components/nodejs"
 import ObserveImage from "../components/observe.svg"
 import LogosImage from "../components/logos"

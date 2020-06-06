@@ -7,6 +7,13 @@ module.exports = {
   plugins: [
     `gatsby-plugin-react-helmet`,
     {
+      resolve: "gatsby-source-filesystem",
+      options: {
+        name: "docs",
+        path: `${__dirname}/docs`,
+      },
+    },
+    {
       resolve: `gatsby-source-filesystem`,
       options: {
         name: `images`,
@@ -36,5 +43,6 @@ module.exports = {
         pathToConfigModule: `src/typography`,
       },
     },
+    `gatsby-transformer-remark`,
   ],
 }
