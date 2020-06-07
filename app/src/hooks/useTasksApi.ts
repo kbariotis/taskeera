@@ -53,7 +53,7 @@ export const useTasksApi = (initialData: Task[]) => {
     const fetchData = async () => {
       dispatch({ type: "FETCH_INIT" })
 
-      const result = await axios("/tasks")
+      const result = await axios("/api/tasks")
       try {
         if (!didCancel) {
           dispatch({ type: "FETCH_SUCCESS", payload: result.data.tasks })
