@@ -1,5 +1,5 @@
 import axios from "axios"
-import { useState, useEffect, useReducer } from "react"
+import { useEffect, useReducer } from "react"
 
 export type Task = {
   id: number
@@ -9,15 +9,15 @@ export type Task = {
   metadata: Record<string, any>
 }
 
-type TasksApiState = {
-  tasks: Task[]
+type TaskApiState = {
+  task?: Task
   isLoading: boolean
   isError: boolean
 }
 
 const dataFetchReducer = (
-  state: TasksApiState,
-  action: { type: string; payload?: Task[] | Task },
+  state: TaskApiState,
+  action: { type: string; payload?: Task },
 ) => {
   switch (action.type) {
     case "FETCH_INIT":
@@ -30,23 +30,13 @@ const dataFetchReducer = (
       return {
         isLoading: false,
         isError: false,
-        tasks: action.payload as Task[],
-      }
-    case "NEW_TASK_RECEIVED":
-      return {
-        isLoading: false,
-        isError: false,
-        tasks: [(action.payload as unknown) as Task, ...state.tasks],
+        task: action.payload as Task,
       }
     case "TASK_UPDATED":
       return {
         isLoading: false,
         isError: false,
-        tasks: state.tasks.map(item =>
-          item.id === ((action.payload as unknown) as Task).id
-            ? ((action.payload as unknown) as Task)
-            : item,
-        ),
+        task: action.payload as Task,
       }
     case "FETCH_FAILURE":
       return {
@@ -59,15 +49,10 @@ const dataFetchReducer = (
   }
 }
 
-export const useTasksApi = (
-  initialSearchQuery: string,
-  initialData: Task[],
-): [TasksApiState, React.Dispatch<React.SetStateAction<string>>] => {
-  const [searchQuery, setSearchQuery] = useState(initialSearchQuery)
+export const useTaskApi = (taskId: number): [TaskApiState] => {
   const [state, dispatch] = useReducer(dataFetchReducer, {
     isLoading: true,
     isError: false,
-    tasks: initialData,
   })
 
   useEffect(() => {
@@ -76,12 +61,10 @@ export const useTasksApi = (
     const fetchData = async () => {
       dispatch({ type: "FETCH_INIT" })
 
-      const result = await axios(
-        `/api/tasks?${searchQuery ? `search=${searchQuery}` : ""}`,
-      )
+      const result = await axios(`/api/tasks/${taskId}`)
       try {
         if (!didCancel) {
-          dispatch({ type: "FETCH_SUCCESS", payload: result.data.tasks })
+          dispatch({ type: "FETCH_SUCCESS", payload: result.data.task })
         }
       } catch (error) {
         if (!didCancel) {
@@ -95,7 +78,7 @@ export const useTasksApi = (
     return () => {
       didCancel = true
     }
-  }, [searchQuery])
+  }, [taskId])
 
   useEffect(() => {
     const socket = new WebSocket("ws://localhost:8090/socket-io")
@@ -103,17 +86,13 @@ export const useTasksApi = (
     socket.addEventListener("message", function (event) {
       const payload = JSON.parse(event.data)
       switch (payload.event) {
-        case "TASK_CREATED":
-          dispatch({
-            type: "NEW_TASK_RECEIVED",
-            payload: JSON.parse(event.data).data,
-          })
-          break
         case "TASK_UPDATED":
-          dispatch({
-            type: "TASK_UPDATED",
-            payload: JSON.parse(event.data).data,
-          })
+          if (payload.data.id === taskId) {
+            dispatch({
+              type: "TASK_UPDATED",
+              payload: payload.data,
+            })
+          }
           break
         default:
           break
@@ -121,5 +100,5 @@ export const useTasksApi = (
     })
   }, [])
 
-  return [state, setSearchQuery]
+  return [state]
 }

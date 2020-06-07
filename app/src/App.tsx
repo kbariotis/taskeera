@@ -1,69 +1,51 @@
 import React from "react"
-import { Menu, Input, Container, Header, Table } from "semantic-ui-react"
+import { Menu, Input, Header } from "semantic-ui-react"
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom"
 
-import "semantic-ui-css/semantic.min.css"
-
-import { useTasksApi } from "./hooks/useTasksApi"
+import TaskPage from "./pages/task"
+import IndexPage from "./pages/index"
 
 function App() {
-  const [{ tasks, isLoading, isError }, setSearchQuery] = useTasksApi("", [])
-
-  const activeItem: string = "account"
+  const activeItem: string = "home"
   return (
-    <>
-      <Menu>
-        <Menu.Item>
-          <Header as="h1">Taskeera</Header>
-        </Menu.Item>
-        <Menu.Item>
-          <Input
-            icon="search"
-            placeholder="Search..."
-            onKeyPress={(event: any) =>
-              event.key === "Enter"
-                ? setSearchQuery(event.target.value)
-                : undefined
-            }
-          />
-        </Menu.Item>
-        <Menu.Menu position="right">
-          <Menu.Item
-            name="account"
-            active={activeItem === "home"}
-            onClick={() => {}}
-          />
-        </Menu.Menu>
-      </Menu>
-      <Container text>
-        <Header as="h2">Tasks</Header>
-        {isError && <div>Something went wrong ...</div>}
-        {isLoading ? (
-          <div>Loading ...</div>
-        ) : (
-          <Table celled>
-            <Table.Header>
-              <Table.Row>
-                <Table.HeaderCell>Id</Table.HeaderCell>
-                <Table.HeaderCell>Name</Table.HeaderCell>
-                <Table.HeaderCell>State</Table.HeaderCell>
-                <Table.HeaderCell>Group</Table.HeaderCell>
-              </Table.Row>
-            </Table.Header>
+    <Router>
+      <div>
+        <Menu>
+          <Menu.Item>
+            <Header as="h1">
+              <Link to="/">Taskeera</Link>
+            </Header>
+          </Menu.Item>
+          <Menu.Item>
+            <Input
+              icon="search"
+              placeholder="Search..."
+              // onKeyPress={(event: any) =>
+              //   event.key === "Enter"
+              //     ? setSearchQuery(event.target.value)
+              //     : undefined
+              // }
+            />
+          </Menu.Item>
+          <Menu.Menu position="right">
+            <Menu.Item
+              name="account"
+              active={activeItem === "home"}
+              onClick={() => <Link to="/" />}
+            />
+          </Menu.Menu>
+        </Menu>
 
-            <Table.Body>
-              {tasks.map((item: any, index: number) => (
-                <Table.Row key={index}>
-                  <Table.Cell>{item.id}</Table.Cell>
-                  <Table.Cell>{item.name}</Table.Cell>
-                  <Table.Cell>{item.state}</Table.Cell>
-                  <Table.Cell>{item.group}</Table.Cell>
-                </Table.Row>
-              ))}
-            </Table.Body>
-          </Table>
-        )}
-      </Container>
-    </>
+        <Switch>
+          <Route path="/task/:id">
+            <TaskPage />
+          </Route>
+          <Route path="/">
+            <IndexPage />
+          </Route>
+        </Switch>
+      </div>
+    </Router>
   )
 }
 
