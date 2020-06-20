@@ -1,12 +1,15 @@
 import axios from "axios"
 import { useEffect, useReducer } from "react"
 
+import { useSocket } from "./useSocket"
+
 export type Task = {
   id: number
   name: string
   state: "waiting" | "queued" | "delayed" | "running" | "failed" | "done"
   group: string
   metadata: Record<string, any>
+  created_at: string
 }
 
 type TaskApiState = {
@@ -80,25 +83,20 @@ export const useTaskApi = (taskId: number): [TaskApiState] => {
     }
   }, [taskId])
 
-  useEffect(() => {
-    const socket = new WebSocket("ws://localhost:8090/socket-io")
-
-    socket.addEventListener("message", function (event) {
-      const payload = JSON.parse(event.data)
-      switch (payload.event) {
-        case "TASK_UPDATED":
-          if (payload.data.id === taskId) {
-            dispatch({
-              type: "TASK_UPDATED",
-              payload: payload.data,
-            })
-          }
-          break
-        default:
-          break
-      }
-    })
-  }, [])
+  useSocket(payload => {
+    switch (payload.event) {
+      case "TASK_UPDATED":
+        if (payload.data.id === taskId) {
+          dispatch({
+            type: "TASK_UPDATED",
+            payload: payload.data,
+          })
+        }
+        break
+      default:
+        break
+    }
+  })
 
   return [state]
 }

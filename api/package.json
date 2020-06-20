@@ -1,0 +1,53 @@
+{
+  "private": true,
+  "engines": {
+    "node": ">= 12.13 <13"
+  },
+  "devDependencies": {
+    "@types/bluebird": "^3.5.32",
+    "@types/bull": "^3.13.0",
+    "@types/express": "^4.17.6",
+    "@types/hapi__boom": "^9.0.1",
+    "@types/hapi__joi": "^17.1.2",
+    "@types/morgan": "^1.9.0",
+    "@types/node": "^14.0.11",
+    "@types/ws": "^7.2.5",
+    "@typescript-eslint/eslint-plugin": "~2.32.0",
+    "@typescript-eslint/parser": "~2.32.0",
+    "dotenv": "^8.2.0",
+    "eslint-config-prettier": "~6.11.0",
+    "eslint-plugin-jest": "~23.10.0",
+    "eslint": "~7.0.0",
+    "nodemon": "^2.0.4",
+    "prettier": "~2.0.5",
+    "rimraf": "~3.0.2",
+    "ts-node": "^8.10.2",
+    "tsutils": "~3.17.0",
+    "typescript": "~3.8.3"
+  },
+  "scripts": {
+    "clean": "rimraf coverage build tmp",
+    "knex": "knex",
+    "ts-node": "ts-node",
+    "start": "ts-node server",
+    "build": "tsc -p tsconfig.release.json",
+    "lint": "eslint . --ext .ts,.tsx",
+    "test": "jest --coverage",
+    "test:watch": "jest --watch"
+  },
+  "dependencies": {
+    "@hapi/boom": "^9.1.0",
+    "@hapi/joi": "^17.1.1",
+    "axios": "^0.19.2",
+    "bluebird": "^3.7.2",
+    "body-parser": "^1.19.0",
+    "bull": "^3.14.0",
+    "express": "^4.17.1",
+    "knex": "^0.21.1",
+    "morgan": "^1.10.0",
+    "pg": "^8.2.1",
+    "tslib": "~1.11.2",
+    "winston": "^3.2.1",
+    "ws": "^7.3.0"
+  }
+}

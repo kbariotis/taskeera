@@ -1637,6 +1637,13 @@
     "@types/prop-types" "*"
     csstype "^2.2.0"
 
+"@types/recoil@^0.0.0":
+  version "0.0.0"
+  resolved "https://registry.yarnpkg.com/@types/recoil/-/recoil-0.0.0.tgz#1a77a5d50d6a398b7b16b4464e516761efcbab8d"
+  integrity sha512-i00Sidw/UDe6jxCJrY5HotFfKIMIbKHGf5chJw7AsxdHe7G8m/ot71AcnbLOS1rLTtnXnENQcf8upKYsGJNvyA==
+  dependencies:
+    "@types/react" "*"
+
 "@types/stack-utils@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@types/stack-utils/-/stack-utils-1.0.1.tgz#0a851d3bd96498fa25c33ab7278ed3bd65f06c3e"
@@ -8888,6 +8895,11 @@ react-scripts@3.4.1:
   optionalDependencies:
     fsevents "2.1.2"
 
+react-use-websocket@^2.0.3-b.4:
+  version "2.0.3-b.4"
+  resolved "https://registry.yarnpkg.com/react-use-websocket/-/react-use-websocket-2.0.3-b.4.tgz#fc45d156c715951d4b50982cf3266b4e0feb1571"
+  integrity sha512-ySqGaWHnm4kNjKiueGNbfPtVYUalxEBLNpHFEJTQowQkPde5cM0PhXsZ+xPkwniW03PTh+a3jFRzZ05UVDmWtg==
+
 react@^16.13.1:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react/-/react-16.13.1.tgz#2e818822f1a9743122c063d6410d85c1e3afe48e"
@@ -8975,6 +8987,11 @@ realpath-native@^1.1.0:
   integrity sha512-wlgPA6cCIIg9gKz0fgAPjnzh4yR/LnXovwuo9hvyGvx3h8nX4+/iLZplfUWasXpqD8BdnGnP5njOFjkUwPzvjA==
   dependencies:
     util.promisify "^1.0.0"
+
+recoil@^0.0.8:
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/recoil/-/recoil-0.0.8.tgz#b24eb00fb8bfcbefb68836dc5ebc93cf884ed0f4"
+  integrity sha512-lfIH6y9A0wQ6piucwWFZfpp9KNQ+mFdTPFPFL0m0sRCrfsuwz3lyVaaofHY6/O4BXekDoXyjYodPBgCSdw9HCw==
 
 recursive-readdir@2.2.2:
   version "2.2.2"

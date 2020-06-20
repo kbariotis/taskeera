@@ -1,5 +1,7 @@
 import axios from "axios"
-import { useState, useEffect, useReducer } from "react"
+import { useEffect, useReducer } from "react"
+
+import { useSocket } from "./useSocket"
 
 export type Task = {
   id: number
@@ -60,15 +62,19 @@ const dataFetchReducer = (
 }
 
 export const useTasksApi = (
-  initialSearchQuery: string,
   initialData: Task[],
-): [TasksApiState, React.Dispatch<React.SetStateAction<string>>] => {
-  const [searchQuery, setSearchQuery] = useState(initialSearchQuery)
+  query: {
+    search?: string
+    group?: string
+  },
+): [TasksApiState] => {
   const [state, dispatch] = useReducer(dataFetchReducer, {
     isLoading: true,
     isError: false,
     tasks: initialData,
   })
+
+  const { search, group } = query
 
   useEffect(() => {
     let didCancel = false
@@ -77,7 +83,9 @@ export const useTasksApi = (
       dispatch({ type: "FETCH_INIT" })
 
       const result = await axios(
-        `/api/tasks?${searchQuery ? `search=${searchQuery}` : ""}`,
+        `/api/tasks${query.search ? `?search=${query.search}` : ""}${
+          query.group ? `?group=${query.group}` : ""
+        }`,
       )
       try {
         if (!didCancel) {
@@ -95,31 +103,29 @@ export const useTasksApi = (
     return () => {
       didCancel = true
     }
-  }, [searchQuery])
+  }, [search, group])
 
-  useEffect(() => {
-    const socket = new WebSocket("ws://localhost:8090/socket-io")
+  useSocket(payload => {
+    if (payload.data.group !== group) {
+      return
+    }
+    switch (payload.event) {
+      case "TASK_CREATED":
+        dispatch({
+          type: "NEW_TASK_RECEIVED",
+          payload: payload.data,
+        })
+        break
+      case "TASK_UPDATED":
+        dispatch({
+          type: "TASK_UPDATED",
+          payload: payload.data,
+        })
+        break
+      default:
+        break
+    }
+  })
 
-    socket.addEventListener("message", function (event) {
-      const payload = JSON.parse(event.data)
-      switch (payload.event) {
-        case "TASK_CREATED":
-          dispatch({
-            type: "NEW_TASK_RECEIVED",
-            payload: JSON.parse(event.data).data,
-          })
-          break
-        case "TASK_UPDATED":
-          dispatch({
-            type: "TASK_UPDATED",
-            payload: JSON.parse(event.data).data,
-          })
-          break
-        default:
-          break
-      }
-    })
-  }, [])
-
-  return [state, setSearchQuery]
+  return [state]
 }
