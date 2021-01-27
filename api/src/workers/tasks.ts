@@ -55,9 +55,9 @@ tasksQueue.process(async function (job) {
   const internalTask = await processCreateTask({
     action: "CREATE",
     task: {
-      name: "CreateTask",
+      name: "process-task",
       state: "running",
-      group: "Tasks",
+      group: "__internal__",
       metadata: job.data.task,
     },
   })

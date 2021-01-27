@@ -13,17 +13,17 @@ type CreateTaskBody = {
 
 const createTaskSchema = Joi.object({
   name: Joi.string()
-    .pattern(new RegExp("^[a-zA-Z0-9-_]*$"))
+    .pattern(new RegExp("^[a-z0-9-_]*$"))
     .min(3)
     .max(30)
     .required(),
   state: Joi.string()
-    .pattern(new RegExp("^[a-zA-Z0-9-_]*$"))
+    .pattern(new RegExp("^[a-z0-9-_]*$"))
     .min(3)
     .max(30)
     .required(),
   group: Joi.string()
-    .pattern(new RegExp("^[a-zA-Z0-9-_]*$"))
+    .pattern(new RegExp("^[a-z0-9-_]*$"))
     .min(3)
     .max(30)
     .required(),

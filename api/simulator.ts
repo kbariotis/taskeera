@@ -1,12 +1,12 @@
 import axios from "axios"
 import bluebird from "bluebird"
 
-const services = ["UserService", "PaymentService", "ScheduleService"]
+const services = ["user-service", "payment-service", "schedule-service"]
 const states = ["done", "running", "waiting", "failed"]
 const tasks = {
-  UserService: ["OnboardUser", "OffboardUser"],
-  PaymentService: ["ProcessPayment", "ProcessRefund"],
-  ScheduleService: ["SetEvent", "CancelEvent"],
+  "user-service": ["onboard-user", "offboard-user"],
+  "payment-service": ["process-payment", "process-refund"],
+  "schedule-service": ["set-event", "cancel-event"],
 }
 
 const randomNo = (min: number, max: number) =>
