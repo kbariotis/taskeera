@@ -11,10 +11,6 @@ function getEnvVar(name: string, parser?: (input: string) => any) {
 type Config = {
   nodeEnv: string
   appMode: string
-  redis: {
-    host: string
-    password: string
-  }
   postgres: {
     host: string
     password: string
@@ -26,10 +22,6 @@ type Config = {
 const config: Config = {
   nodeEnv: getEnvVar("NODE_ENV"),
   appMode: getEnvVar("APP_MODE"),
-  redis: {
-    host: getEnvVar("REDIS_HOST"),
-    password: getEnvVar("REDIS_PASSWORD"),
-  },
   postgres: {
     host: getEnvVar("POSTGRES_HOST"),
     password: getEnvVar("POSTGRES_PASSWORD"),

@@ -1,12 +1,13 @@
 import WebSocket from "ws"
 
-import { tasksQueue, CreateTaskJob, UpdateTaskJob } from "../queues"
-import { createTask, updateTask, TaskRecord } from "../models/tasks"
+import { CreateTaskJob, UpdateTaskJob } from "../queues"
+import { createTask, updateTask } from "../models/tasks"
 import logger from "../logger"
+
 import { sockets } from "../sockets"
 
 const childLogger = logger.child({
-  queue: "createTasksQueue",
+  queue: "tasksWorker",
 })
 
 type TaskCreatedEvent = {
@@ -49,7 +50,7 @@ async function processUpdateTask(input: UpdateTaskJob) {
   return response
 }
 
-tasksQueue.process(async function (job) {
+export default async (job: any) => {
   childLogger.info("Starting to process job")
 
   const internalTask = await processCreateTask({
@@ -58,20 +59,18 @@ tasksQueue.process(async function (job) {
       name: "process-task",
       state: "running",
       group: "__internal__",
-      metadata: job.data.task,
+      metadata: job.task,
     },
   })
 
-  let response: TaskRecord
-
   try {
-    switch (job.data.action) {
+    switch (job.action) {
       case "CREATE": {
-        response = await processCreateTask(job.data as CreateTaskJob)
+        await processCreateTask(job as CreateTaskJob)
         break
       }
       case "UPDATE": {
-        response = await processUpdateTask(job.data as UpdateTaskJob)
+        await processUpdateTask(job as UpdateTaskJob)
         break
       }
       default:
@@ -85,8 +84,8 @@ tasksQueue.process(async function (job) {
         state: "done",
       },
     })
-    return response
   } catch (e) {
+    childLogger.error("Error while processing job")
     await processUpdateTask({
       action: "UPDATE",
       id: internalTask.id,
@@ -97,4 +96,4 @@ tasksQueue.process(async function (job) {
 
     throw e
   }
-})
+}

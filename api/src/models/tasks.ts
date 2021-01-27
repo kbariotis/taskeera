@@ -1,6 +1,10 @@
 import db from "../db"
 import logger from "../logger"
 
+const childLogger = logger.child({
+  queue: "tasksModel",
+})
+
 export interface TaskRecord {
   id: number
   name: string
@@ -12,7 +16,7 @@ export interface TaskRecord {
 }
 
 export const getAllTasks = (group?: string) => {
-  logger.info("getAllTasks")
+  childLogger.info("getAllTasks")
 
   const query = db<TaskRecord>("tasks").select()
 
@@ -24,7 +28,7 @@ export const getAllTasks = (group?: string) => {
 }
 
 export const getOneTask = (id: number) => {
-  logger.info("getOneTask")
+  childLogger.info("getOneTask")
 
   return db<TaskRecord>("tasks")
     .select()
@@ -33,7 +37,7 @@ export const getOneTask = (id: number) => {
 }
 
 export const aggregateByGroup = () => {
-  logger.info("aggregateByGroup")
+  childLogger.info("aggregateByGroup")
 
   return db<TaskRecord>("tasks")
     .select("group", "state", db.raw("COUNT(*)"))
@@ -42,7 +46,7 @@ export const aggregateByGroup = () => {
 }
 
 export const searchOnMetadata = (query: Record<string, string>) => {
-  logger.info("searchOnMetadata")
+  childLogger.info("searchOnMetadata")
 
   return db<TaskRecord>("tasks")
     .select()
@@ -66,7 +70,7 @@ interface TaskCreateInput {
 export const createTask = async (
   task: TaskCreateInput,
 ): Promise<TaskRecord> => {
-  logger.info("createTask")
+  childLogger.info("createTask")
 
   const [record] = await db<TaskRecord>("tasks")
     .returning("*")
@@ -87,7 +91,7 @@ export const updateTask = async (
   id: number,
   task: TaskUpdateInput,
 ): Promise<TaskRecord> => {
-  logger.info("updateTask")
+  childLogger.info("updateTask")
 
   const [record] = await db<TaskRecord>("tasks")
     .returning("*")

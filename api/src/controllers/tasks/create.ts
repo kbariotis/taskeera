@@ -2,7 +2,7 @@ import { Request, Response } from "express"
 import Joi from "@hapi/joi"
 import Boom from "@hapi/boom"
 
-import { tasksQueue, CreateTaskJob } from "../../queues"
+import { processTaskLater } from "../../queues"
 
 type CreateTaskBody = {
   name: string
@@ -30,7 +30,10 @@ const createTaskSchema = Joi.object({
   metadata: Joi.object(),
 })
 
-export const createTask = (req: Request<{}, CreateTaskBody>, res: Response) => {
+export const createTask = async (
+  req: Request<{}, CreateTaskBody>,
+  res: Response,
+) => {
   const input = req.body
 
   const results = createTaskSchema.validate(input)
@@ -39,10 +42,10 @@ export const createTask = (req: Request<{}, CreateTaskBody>, res: Response) => {
     throw Boom.badRequest("Invalid input", results.error.message)
   }
 
-  tasksQueue.add({
+  await processTaskLater({
     action: "CREATE",
     task: input,
-  } as CreateTaskJob)
+  })
 
   res.status(202).json({
     success: true,

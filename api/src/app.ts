@@ -9,7 +9,7 @@ import { getOneTask } from "./controllers/tasks/getOne"
 import { aggregateTasks } from "./controllers/tasks/aggregate"
 import loggerMiddleware from "./middlewareds/logger"
 
-import "./workers/tasks"
+import "./worker"
 
 const app = express()
 app.use(bodyParser.json())
