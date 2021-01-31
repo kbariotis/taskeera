@@ -1,0 +1,49 @@
+---
+title: "Tasks API"
+slug: /api/tasks
+---
+
+## Create a task
+
+`POST /tasks`
+
+This action is asynchronous meaning that the task won't be created immediately but rather will be put on a queue to be stored later. This is happening to avoid overloading the database.
+
+| Attribute    | Required | Type   | Description                                                                    |
+| ------------ | -------- | ------ | ------------------------------------------------------------------------------ |
+| name         | true     | string | The name of the process.                                                       |
+| state        | false    | string | State can be: `running`, `failed`, `done`.                                     |
+| group        | true     | string | Which group does this belongs to.                                              |
+| reference_id | true     | string | External reference ID by which you can reference to this task. Must be unique. |
+| metadata     | false    | object | Optional unstructured data about this process.                                 |
+
+### Example request
+
+```JSON
+{
+  "name": "process-payment",
+  "state": "running",
+  "group": "payments-service",
+  "reference_id": "external-id",
+  "metadata": {
+    "currency": "USD",
+    "amount": 45,
+  }
+}
+```
+
+### Example response
+
+```JSON
+{
+  "success": true
+}
+```
+
+## Update a task
+
+// Coming soon
+
+## Get all tasks
+
+// Coming soon
