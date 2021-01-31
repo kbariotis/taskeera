@@ -1,6 +1,7 @@
 import { run } from "graphile-worker"
 
 import config from "./config"
+import logger from "./logger"
 import processTaskWorker from "./workers/processTask"
 
 async function main() {
@@ -18,6 +19,6 @@ async function main() {
 }
 
 main().catch(err => {
-  console.error(err)
+  logger.error(err)
   process.exit(1)
 })

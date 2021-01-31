@@ -1,36 +1,20 @@
-import WebSocket from "ws"
 import { v4 as uuidv4 } from "uuid"
 
 import { CreateTaskJob, UpdateTaskJob } from "../queues"
 import { createTask, updateTaskByReferenceId } from "../models/tasks"
 import logger from "../logger"
 
-import { sockets } from "../sockets"
+import { broadcast } from "../sockets"
 
 const childLogger = logger.child({
   queue: "tasksWorker",
 })
 
-type TaskCreatedEvent = {
-  event: "TASK_CREATED"
-  data: Record<string, any>
-}
-
-type TaskUpdatedEvent = {
-  event: "TASK_UPDATED"
-  data: Record<string, any>
-}
-
 async function processCreateTask(input: CreateTaskJob) {
   const response = await createTask(input.task)
-  sockets.clients.forEach(client => {
-    if (client.readyState === WebSocket.OPEN) {
-      const event: TaskCreatedEvent = {
-        event: "TASK_CREATED",
-        data: response,
-      }
-      client.send(JSON.stringify(event))
-    }
+  broadcast({
+    event: "TASK_CREATED",
+    data: response,
   })
 
   return response
@@ -38,16 +22,10 @@ async function processCreateTask(input: CreateTaskJob) {
 
 async function processUpdateTask(input: UpdateTaskJob) {
   const response = await updateTaskByReferenceId(input.id, input.task)
-  sockets.clients.forEach(client => {
-    if (client.readyState === WebSocket.OPEN) {
-      const event: TaskUpdatedEvent = {
-        event: "TASK_UPDATED",
-        data: response,
-      }
-      client.send(JSON.stringify(event))
-    }
+  broadcast({
+    event: "TASK_UPDATED",
+    data: response,
   })
-
   return response
 }
 

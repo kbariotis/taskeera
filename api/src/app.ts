@@ -7,7 +7,7 @@ import { updateTask } from "./controllers/tasks/update"
 import { getAllTasks } from "./controllers/tasks/getAll"
 import { getOneTask } from "./controllers/tasks/getOne"
 import { aggregateTasks } from "./controllers/tasks/aggregate"
-import loggerMiddleware from "./middlewareds/logger"
+import loggerMiddleware from "./middlewares/logger"
 
 import "./worker"
 
