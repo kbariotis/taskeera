@@ -6,7 +6,7 @@ module.exports = {
       options: {
         name: "Smooth DOC Starter",
         description: "Use your own description...",
-        siteUrl: "https://taskeera.com/docs",
+        siteUrl: "https://docs.taskeera.com",
       },
     },
   ],
