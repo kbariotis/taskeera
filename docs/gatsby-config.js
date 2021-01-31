@@ -1,5 +1,4 @@
 module.exports = {
-  pathPrefix: "/docs",
   siteMetadata: {
     title: `Taskeera`,
     description: `Bring visibility of your background tasks.`,
