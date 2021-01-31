@@ -61,7 +61,9 @@ export default async (job: any) => {
       state: "running",
       group: "__internal__",
       reference_id: uuidv4(),
-      metadata: job.task,
+      metadata: {
+        task_reference_id: job.task.reference_id,
+      },
     },
   })
 
