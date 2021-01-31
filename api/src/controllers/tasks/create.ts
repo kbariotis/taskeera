@@ -6,8 +6,9 @@ import { processTaskLater } from "../../queues"
 
 type CreateTaskBody = {
   name: string
-  state: "waiting" | "queued" | "delayed" | "running" | "failed" | "done"
+  state: "queued" | "running" | "failed" | "done"
   group: string
+  reference_id: string
   metadata: Record<string, any>
 }
 
@@ -17,21 +18,18 @@ const createTaskSchema = Joi.object({
     .min(3)
     .max(30)
     .required(),
-  state: Joi.string()
-    .pattern(new RegExp("^[a-z0-9-_]*$"))
-    .min(3)
-    .max(30)
-    .required(),
+  state: Joi.string().valid("queued", "running", "failed", "done").required(),
   group: Joi.string()
     .pattern(new RegExp("^[a-z0-9-_]*$"))
     .min(3)
     .max(30)
     .required(),
+  reference_id: Joi.string().min(1).max(128).required(),
   metadata: Joi.object(),
 })
 
 export const createTask = async (
-  req: Request<{}, CreateTaskBody>,
+  req: Request<{}, { success: boolean }, CreateTaskBody>,
   res: Response,
 ) => {
   const input = req.body

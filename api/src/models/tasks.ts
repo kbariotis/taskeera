@@ -8,8 +8,9 @@ const childLogger = logger.child({
 export interface TaskRecord {
   id: number
   name: string
-  state: "waiting" | "queued" | "delayed" | "running" | "failed" | "done"
+  state: "queued" | "running" | "failed" | "done"
   group: string
+  reference_id: string
   metadata: string
   created_at: Date
   updated_at: Date
@@ -63,8 +64,9 @@ export const searchOnMetadata = (query: Record<string, string>) => {
 interface TaskCreateInput {
   name: string
   metadata: Record<string, any>
-  state: "waiting" | "queued" | "delayed" | "running" | "failed" | "done"
+  state: "queued" | "running" | "failed" | "done"
   group: string
+  reference_id: string
 }
 
 export const createTask = async (
@@ -84,18 +86,18 @@ export const createTask = async (
 }
 
 interface TaskUpdateInput {
-  state?: "waiting" | "queued" | "delayed" | "running" | "failed" | "done"
+  state?: "queued" | "running" | "failed" | "done"
 }
 
-export const updateTask = async (
-  id: number,
+export const updateTaskByReferenceId = async (
+  referenceId: string,
   task: TaskUpdateInput,
 ): Promise<TaskRecord> => {
   childLogger.info("updateTask")
 
   const [record] = await db<TaskRecord>("tasks")
     .returning("*")
-    .where("id", id)
+    .where("reference_id", referenceId)
     .update({
       state: task.state,
       updated_at: new Date(),

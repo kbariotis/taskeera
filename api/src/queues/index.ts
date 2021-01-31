@@ -7,19 +7,17 @@ export type CreateTaskJob = {
   task: {
     name: string
     group: string
-    state: "waiting" | "queued" | "delayed" | "running" | "failed" | "done"
+    state: "queued" | "running" | "failed" | "done"
+    reference_id: string
     metadata: Record<string, any>
   }
 }
 
 export type UpdateTaskJob = {
   action: "UPDATE"
-  id: number
+  id: string
   task: {
-    name?: string
-    group?: string
-    state?: "waiting" | "queued" | "delayed" | "running" | "failed" | "done"
-    metadata?: Record<string, any>
+    state?: "queued" | "running" | "failed" | "done"
   }
 }
 

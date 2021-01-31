@@ -12,9 +12,7 @@ import { useParams } from "react-router-dom"
 import { useTaskApi, Task } from "../hooks/useTaskApi"
 
 const options: Record<string, SemanticCOLORS> = {
-  waiting: "teal",
   queued: "yellow",
-  delayed: "purple",
   running: "blue",
   failed: "red",
   done: "olive",
@@ -50,6 +48,10 @@ function IndexPage() {
             <Table.Row>
               <Table.Cell>Group</Table.Cell>
               <Table.Cell>{(task as Task).group}</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>Reference ID</Table.Cell>
+              <Table.Cell>{(task as Task).reference_id}</Table.Cell>
             </Table.Row>
             <Table.Row>
               <Table.Cell>State</Table.Cell>

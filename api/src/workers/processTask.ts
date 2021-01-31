@@ -1,7 +1,8 @@
 import WebSocket from "ws"
+import { v4 as uuidv4 } from "uuid"
 
 import { CreateTaskJob, UpdateTaskJob } from "../queues"
-import { createTask, updateTask } from "../models/tasks"
+import { createTask, updateTaskByReferenceId } from "../models/tasks"
 import logger from "../logger"
 
 import { sockets } from "../sockets"
@@ -36,7 +37,7 @@ async function processCreateTask(input: CreateTaskJob) {
 }
 
 async function processUpdateTask(input: UpdateTaskJob) {
-  const response = await updateTask(input.id, input.task)
+  const response = await updateTaskByReferenceId(input.id, input.task)
   sockets.clients.forEach(client => {
     if (client.readyState === WebSocket.OPEN) {
       const event: TaskUpdatedEvent = {
@@ -59,6 +60,7 @@ export default async (job: any) => {
       name: "process-task",
       state: "running",
       group: "__internal__",
+      reference_id: uuidv4(),
       metadata: job.task,
     },
   })
@@ -79,7 +81,7 @@ export default async (job: any) => {
 
     await processUpdateTask({
       action: "UPDATE",
-      id: internalTask.id,
+      id: internalTask.reference_id,
       task: {
         state: "done",
       },
@@ -88,7 +90,7 @@ export default async (job: any) => {
     childLogger.error("Error while processing job")
     await processUpdateTask({
       action: "UPDATE",
-      id: internalTask.id,
+      id: internalTask.reference_id,
       task: {
         state: "failed",
       },

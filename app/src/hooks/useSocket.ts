@@ -3,8 +3,9 @@ import { useRef, useEffect } from "react"
 export type Task = {
   id: number
   name: string
-  state: "waiting" | "queued" | "delayed" | "running" | "failed" | "done"
+  state: "queued" | "running" | "failed" | "done"
   group: string
+  reference_id: string
   metadata: Record<string, any>
   created_at: string
 }

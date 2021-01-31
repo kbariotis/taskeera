@@ -1,8 +1,9 @@
 import axios from "axios"
 import bluebird from "bluebird"
+import { v4 as uuidv4 } from "uuid"
 
 const services = ["user-service", "payment-service", "schedule-service"]
-const states = ["done", "running", "waiting", "failed"]
+const states = ["done", "running", "queued", "failed"]
 const tasks = {
   "user-service": ["onboard-user", "offboard-user"],
   "payment-service": ["process-payment", "process-refund"],
@@ -26,6 +27,7 @@ async function main() {
         state: randomState(),
         name: randomTask(),
         group: service,
+        reference_id: uuidv4(),
         metadata: {
           userId: randomNo(1, 5000),
         },

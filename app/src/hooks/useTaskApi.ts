@@ -6,6 +6,7 @@ import { useSocket } from "./useSocket"
 export type Task = {
   id: number
   name: string
+  reference_id: string
   state: "waiting" | "queued" | "delayed" | "running" | "failed" | "done"
   group: string
   metadata: Record<string, any>

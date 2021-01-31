@@ -6,8 +6,7 @@ import Boom from "@hapi/boom"
 import { processTaskLater } from "../../queues"
 
 export type UpdateTaskBody = {
-  id: number
-  state?: "waiting" | "queued" | "delayed" | "running" | "failed" | "done"
+  state?: "queued" | "running" | "failed" | "done"
 }
 
 const updateTaskSchema = Joi.object({
@@ -15,7 +14,7 @@ const updateTaskSchema = Joi.object({
 }).or("name", "state", "group")
 
 export const updateTask = async (
-  req: Request<{ id: string }, UpdateTaskBody>,
+  req: Request<{ id: string }, { success: boolean }, UpdateTaskBody>,
   res: Response,
 ) => {
   const input = req.body
@@ -28,7 +27,7 @@ export const updateTask = async (
 
   await processTaskLater({
     action: "UPDATE",
-    id: parseInt(req.params.id),
+    id: req.params.id,
     task: input,
   })
 

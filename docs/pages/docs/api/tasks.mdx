@@ -15,7 +15,7 @@ This action is asynchronous meaning that the task won't be created immediately b
 | Attribute    | Required | Type   | Description                                                                    |
 | ------------ | -------- | ------ | ------------------------------------------------------------------------------ |
 | name         | true     | string | The name of the process.                                                       |
-| state        | false    | string | State can be: `running`, `failed`, `done`.                                     |
+| state        | false    | string | State can be: `queued`, `running`, `failed`, `done`.                           |
 | group        | true     | string | Which group does this belongs to.                                              |
 | reference_id | true     | string | External reference ID by which you can reference to this task. Must be unique. |
 | metadata     | false    | object | Optional unstructured data about this process.                                 |
@@ -45,7 +45,29 @@ This action is asynchronous meaning that the task won't be created immediately b
 
 ## Update a task
 
-// Coming soon
+`POST /tasks/$reference_id`
+
+To update a task you need the `reference_id` that you've defined during the creation of a task. You can only update the state of a task.
+
+| Attribute | Required | Type   | Description                                          |
+| --------- | -------- | ------ | ---------------------------------------------------- |
+| state     | false    | string | State can be: `queued`, `running`, `failed`, `done`. |
+
+### Example request
+
+```JSON
+{
+  "state": "running"
+}
+```
+
+### Example response
+
+```JSON
+{
+  "success": true
+}
+```
 
 ## Get all tasks
 
